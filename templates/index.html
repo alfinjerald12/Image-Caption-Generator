@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Alfinity Captions | Image Caption Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="ac-body">
+    <header class="ac-header">
+        <div class="ac-header-inner">
+            <div class="ac-logo-mark">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Alfinity Captions Logo" style="width: 55px; height: 55px; background: radial-gradient(circle at 30% 30%, #fdf2b0, #c18c3f 55%, #4a1b6d);box-shadow:0 0 18px rgba(200, 164, 79, 0.8),0 0 32px rgba(90, 51, 120, 0.9);">
+            </div>
+            <div class="ac-brand">
+                <h1 style="font-family: 'Times New Roman', Times, serif;font-style: serif;">Alfinity Captions</h1>
+                <p>Refined AI captions for Every Image</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="ac-main">
+        <section class="ac-shell">
+            <div class="ac-shell-left">
+                <h2 class="ac-section-title">Upload an Image</h2>
+                <p class="ac-section-subtitle">
+                    Choose any photo and let Alfinity Captions generate an elegant, context-aware description
+                </p>
+
+                <form method="POST" enctype="multipart/form-data" class="ac-form">
+                    <label class="ac-file-input">
+                        <span>Select image from your device</span>
+                        <input type="file" name="image" accept="image/*" required>
+                    </label>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="ac-messages">
+                            {% for msg in messages %}
+                                <p class="ac-message">{{ msg }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                
+                <form method="POST" enctype="multipart/form-data" class="ac-form">
+    <!-- NEW CAPTION STYLE DROPDOWN -->
+    <label class="ac-style-select">
+        <span>Select Caption Style</span>
+        <select name="style" required>
+            <option value="realistic" selected>Realistic</option>
+            <option value="funny">Funny</option>
+            <option value="sad">Sad</option>
+        </select>
+    </label>
+
+    <button type="submit" class="ac-primary-btn">Generate Caption</button>
+</form>
+
+            </div>
+
+            <div class="ac-shell-right">
+                <h2 class="ac-section-title">Result</h2>
+
+                <div class="ac-result-panel">
+                    {% if image_url %}
+                        <div class="ac-image-frame">
+                            <img src="{{ image_url }}" alt="Uploaded image">
+                        </div>
+                    {% else %}
+                        <div class="ac-image-placeholder">
+                            <span>No image uploaded yet.</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="ac-caption-block">
+                        <h3>Generated Caption</h3>
+                        {% if caption %}
+                            <p class="ac-caption-text">{{ caption }}</p>
+                        {% else %}
+                            <p class="ac-caption-placeholder">
+                                Your caption will appear here after processing.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="ac-footer">
+        <small>© 2025 All Rights Reserved | Designed by Alfinity Captions</small>
+    </footer>
+</body>
+</html>
