@@ -1,7 +1,5 @@
 flask
-werkzeug
-pillow
-transformers
+gunicorn
 google-generativeai
 python-dotenv
-gunicorn
+Pillow
