@@ -1,25 +1,40 @@
-import base64
+# caption_engine/model.py
+
 from caption_engine.gemini_writer import rewrite_caption
 
-def generate_caption(image_path, style="realistic"):
+
+def generate_caption(image_path: str, style: str = "realistic") -> str:
     """
-    Generates an image caption using ONLY Gemini (no torch, no BLIP).
-    Image is converted to base64 and sent to Gemini for understanding.
+    Generate a caption for an image using only Gemini (no PyTorch, no BLIP).
+    The image is read as raw bytes and passed directly to Gemini.
     """
 
-    with open(image_path, "rb") as img:
-        image_bytes = img.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    # Read image as bytes
+    with open(image_path, "rb") as f:
+        image_bytes = f.read()
 
+    # Style-specific instruction
+    style_instruction = {
+        "realistic": "Describe the image in a clear, detailed and natural way.",
+        "funny": "Describe the image with a playful, witty and humorous tone.",
+        "sad": (
+            "Describe the image with a melancholic, reflective tone, "
+            "without using the words 'sad', 'depressed' or 'emotional'."
+        ),
+    }.get(style, "Describe the image in a natural and clear way.")
+
+    # Prompt sent to Gemini
     prompt = f"""
-Analyze this image carefully and generate a single {style} caption.
+You are an image captioning assistant.
 
-Rules:
-- If style is realistic → describe clearly and naturally.
-- If style is funny → add humor based on what you see.
-- If style is sad → generate a deep, emotional, melancholic tone.
-- The caption must change based on the image.
-- Do not reuse generic phrases.
+Image style requested: {style}
+
+Instructions:
+- Look at the provided image and generate ONE single-line caption.
+- {style_instruction}
+- The caption must be specific to the actual scene, not generic.
+- Do not mention that you are an AI or that you are looking at an image.
+- Do not mention the style name (funny/realistic/sad) in the caption.
 """
 
-    return rewrite_caption(prompt, image_base64)
+    return rewrite_caption(prompt, image_bytes)
